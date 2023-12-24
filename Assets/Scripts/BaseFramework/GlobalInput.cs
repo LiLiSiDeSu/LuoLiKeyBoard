@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GlobalInput : MonoBehaviour
 {
@@ -28,6 +29,8 @@ public class GlobalInput : MonoBehaviour
 
     // °´ÏÂ¼ü
     private const int WM_KEYDOWN = 0x0100;
+    // Ì§Æð¼ü
+    private const int WM_KEYUP = 0x0101;
 
     private static LowLevelKeyboardProc _proc = HookCallback;
     private static IntPtr _hookID = IntPtr.Zero;
@@ -65,6 +68,8 @@ public class GlobalInput : MonoBehaviour
             if (Hot.MgrData_.DicRegisterKey.ContainsKey(vkCode))
             {
                 string key = Hot.MgrData_.DicRegisterKey[vkCode];
+                Hot.PanelKeyBoard_.transform.FindSonSonSon(key).GetComponentInChildren<Image>().color
+                    = Color.red;
 
                 if (Hot.MgrData_.DicAudioSource.ContainsKey(key))
                 {
@@ -73,13 +78,23 @@ public class GlobalInput : MonoBehaviour
                         GameObject obj = Instantiate(Hot.MgrData_.DicAudioSource[key].gameObject);
                         obj.GetComponent<AudioSource>().Play();
                         Hot.MgrData_.ListTempAudioSource.Add(obj.GetComponent<AudioSource>());
-                        UnityEngine.Debug.Log(Hot.MgrData_.ListTempAudioSource.Count);
                     }
                     else
                     {
                         Hot.MgrData_.DicAudioSource[key].Play();
                     }
                 }
+            }
+        }
+        if (nCode >= 0 && wParam == (IntPtr)WM_KEYUP)
+        {
+            int vkCode = Marshal.ReadInt32(lParam);
+
+            if (Hot.MgrData_.DicRegisterKey.ContainsKey(vkCode))
+            {
+                string key = Hot.MgrData_.DicRegisterKey[vkCode];
+                Hot.PanelKeyBoard_.transform.FindSonSonSon(key).GetComponentInChildren<Image>().color
+                    = Color.white;
             }
         }
 

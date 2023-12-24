@@ -5,13 +5,18 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.Events;
 
+public class Config
+{
+    public bool IsRepeat = false;
+}
+
 public class MgrJson : InstanceBaseAuto_Mono<MgrJson>
 {    
     public string filePath = "";
 
     private void Awake()
     {        
-        filePath = "D:/Cao";
+        filePath = "D:/LuoLiKeyBoardData";
     }
 
    /// <summary>
@@ -46,7 +51,7 @@ public class MgrJson : InstanceBaseAuto_Mono<MgrJson>
         if (!File.Exists(filePath + folderPath + fileName + ".Json"))
         {
             Debug.Log("--- MgrJson: " + filePath + folderPath + fileName + ".Json" + " is null ---");
-            return null;
+            return new();
         }
 
         T data = JsonConvert.DeserializeObject<T>(File.ReadAllText(filePath + folderPath + fileName + ".Json"));

@@ -13,14 +13,6 @@ public class Hot
     {
         get { return PoolBuffer.GetInstance(); }
     }
-    public static MgrInput MgrInput_
-    {
-        get { return MgrInput.GetInstance(); }
-    }
-    public static MgrJson MgrJson_
-    {
-        get { return MgrJson.GetInstance(); }
-    }
     public static CenterEvent CenterEvent_
     {
         get { return CenterEvent.GetInstance(); }
@@ -36,6 +28,10 @@ public class Hot
     public static MgrData MgrData_
     {
         get { return MgrData.GetInstance(); }
+    }
+    public static MgrJson MgrJson_
+    {
+        get { return MgrJson.GetInstance(); }
     }
     public static MgrAudioSource MgrAudioSource_
     {

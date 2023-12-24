@@ -5,16 +5,16 @@ public class PoolEsc : InstanceBaseAuto_Mono<PoolEsc>
 {
     public List<string> ListEsc = new();        
 
-    private void Start()
-    {
-        Hot.CenterEvent_.AddEventListener<KeyCode>(E_InputKeyEvent.KeyDown.ToString(), (key) =>
-        {
-            if (key == KeyCode.Escape)
-            {
-                HideTop();
-            }
-        });
-    }
+    //private void Start()
+    //{
+    //    Hot.CenterEvent_.AddEventListener<KeyCode>(E_InputKeyEvent.KeyDown.ToString(), (key) =>
+    //    {
+    //        if (key == KeyCode.Escape)
+    //        {
+    //            HideTop();
+    //        }
+    //    });
+    //}
 
     /// <summary>
     /// 隐藏所有加入PoolEsc的面板并执行面板对应的Esc事件

@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
@@ -31,12 +32,12 @@ public class GlobalInput : MonoBehaviour
     private static LowLevelKeyboardProc _proc = HookCallback;
     private static IntPtr _hookID = IntPtr.Zero;
 
-    void Start()
+    private void Start()
     {
         _hookID = SetHook(_proc);
     }
 
-    void OnApplicationQuit()
+    private void OnApplicationQuit()
     {
         UnhookWindowsHookEx(_hookID);
     }
@@ -60,24 +61,54 @@ public class GlobalInput : MonoBehaviour
         if (nCode >= 0 && wParam == (IntPtr)WM_KEYDOWN)
         {
             int vkCode = Marshal.ReadInt32(lParam);
-            if (vkCode == 87)
+
+            if (Hot.MgrData_.DicRegisterKey.ContainsKey(vkCode))
             {
-                Hot.MgrData_.DicAudioSource[KeyCode.W].Play();
-            }
-            if (vkCode == 65)
-            {
-                Hot.MgrData_.DicAudioSource[KeyCode.A].Play();
-            }
-            if (vkCode == 83)
-            {
-                Hot.MgrData_.DicAudioSource[KeyCode.S].Play();
-            }
-            if (vkCode == 68)
-            {
-                Hot.MgrData_.DicAudioSource[KeyCode.D].Play();
+                string key = Hot.MgrData_.DicRegisterKey[vkCode];
+
+                if (Hot.MgrData_.DicAudioSource.ContainsKey(key))
+                {
+                    if (Hot.PanelKeyBoard_.TogIsRepeat.isOn && Hot.MgrData_.DicAudioSource[key].isPlaying)
+                    {
+                        GameObject obj = Instantiate(Hot.MgrData_.DicAudioSource[key].gameObject);
+                        obj.GetComponent<AudioSource>().Play();
+                        Hot.MgrData_.ListTempAudioSource.Add(obj.GetComponent<AudioSource>());
+                        UnityEngine.Debug.Log(Hot.MgrData_.ListTempAudioSource.Count);
+                    }
+                    else
+                    {
+                        Hot.MgrData_.DicAudioSource[key].Play();
+                    }
+                }
             }
         }
 
-        return CallNextHookEx(_hookID, nCode, wParam, lParam); // 传给下一个钩子
+        if (Hot.MgrData_.ListTempAudioSource.Count >= 10)
+        {
+            bool isQuit = false;
+
+            for (int i = 1; i <= 10; i++)
+            {
+                if (Hot.MgrData_.ListTempAudioSource[^i].isPlaying)
+                {
+                    isQuit = true;
+                    break;
+                }
+            }
+
+            if (!isQuit)
+            {
+                foreach (var item in Hot.MgrData_.ListTempAudioSource)
+                {
+                    DestroyImmediate(item.gameObject);
+                }
+
+                Hot.MgrData_.ListTempAudioSource.Clear();
+                UnityEngine.Debug.Log("Clear");
+            }
+        }
+
+        // 传给下一个钩子
+        return CallNextHookEx(_hookID, nCode, wParam, lParam);
     }
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Runtime.InteropServices;
 using System;
 
-public class WindowActive : MonoBehaviour
+public class ForegroundWindow : MonoBehaviour
 {
     [DllImport("User32.dll")]
     extern static bool SetForegroundWindow(IntPtr hWnd);
@@ -12,26 +12,29 @@ public class WindowActive : MonoBehaviour
 
     [DllImport("user32.dll ")]
     public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+
     static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
     const UInt32 SWP_NOSIZE = 0x0001;
     const UInt32 SWP_NOMOVE = 0x0002;
     IntPtr hWnd;
 
-    //public float Wait = 0;//ÑÓ³ÙÖ´ĞĞ
-    //public float Rate = 1;//¸üĞÂÆµÂÊ
-    public bool KeepForeground = true;//±£³Ö×îÇ°
+    //public float Wait = 0;//å»¶è¿Ÿæ‰§è¡Œ
+    //public float Rate = 1;//æ›´æ–°é¢‘ç‡
 
-    void Start()
+    //ä¿æŒæœ€å‰
+    public bool KeepForeground = true;
+
+    private void Start()
     {
-        hWnd = C.GetProcessWnd();
+        hWnd = GetWindowIntPtr.GetProcessWnd();
         Active();
         //InvokeRepeating("Active", Wait, Rate);
     }
 
     /// <summary>
-    /// ¼¤»î´°¿Ú
+    /// æ¿€æ´»çª—å£
     /// </summary>
-    void Active()
+    private void Active()
     {
         if (KeepForeground)
         {

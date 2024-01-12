@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-public class C
+public class GetWindowIntPtr
 {
     public delegate bool WNDENUMPROC(IntPtr hwnd, uint lParam);
     [DllImport("user32.dll", SetLastError = true)]
@@ -19,7 +19,7 @@ public class C
     public static IntPtr GetProcessWnd()
     {
         IntPtr ptrWnd = IntPtr.Zero;
-        uint pid = (uint)Process.GetCurrentProcess().Id;  // µ±Ç°½ø³Ì ID  
+        uint pid = (uint)Process.GetCurrentProcess().Id;  // å½“å‰è¿›ç¨‹ ID  
 
         bool bResult = EnumWindows(new WNDENUMPROC(delegate (IntPtr hwnd, uint lParam)
         {
@@ -27,11 +27,11 @@ public class C
             if (GetParent(hwnd) == IntPtr.Zero)
             {
                 GetWindowThreadProcessId(hwnd, ref id);
-                if (id == lParam)    // ÕÒµ½½ø³Ì¶ÔÓ¦µÄÖ÷´°¿Ú¾ä±ú  
+                if (id == lParam)    // æ‰¾åˆ°è¿›ç¨‹å¯¹åº”çš„ä¸»çª—å£å¥æŸ„  
                 {
-                    ptrWnd = hwnd;   // °Ñ¾ä±ú»º´æÆğÀ´  
-                    SetLastError(0);    // ÉèÖÃÎŞ´íÎó  
-                    return false;   // ·µ»Ø false ÒÔÖÕÖ¹Ã¶¾Ù´°¿Ú  
+                    ptrWnd = hwnd;   // æŠŠå¥æŸ„ç¼“å­˜èµ·æ¥  
+                    SetLastError(0);    // è®¾ç½®æ— é”™è¯¯  
+                    return false;   // è¿”å› false ä»¥ç»ˆæ­¢æšä¸¾çª—å£  
                 }
             }
 
